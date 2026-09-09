@@ -11,3 +11,15 @@ generator client {
 datasource db {
   provider = "sqlite"
 }
+
+enum ProductType {
+  DRINK
+  SWEET
+}
+
+model Product {
+  id    Int         @id @default(autoincrement())
+  name  String
+  price Decimal
+  type  ProductType
+}
