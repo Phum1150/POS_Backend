@@ -1,0 +1,15 @@
+{
+  "name": "POS_Backend",
+  "scripts": {
+    "dev": "bun run --hot src/index.ts"
+  },
+  "dependencies": {
+    "@prisma/adapter-better-sqlite3": "7.10.0",
+    "@prisma/client": "7.10.0",
+    "hono": "^4.13.7"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "prisma": "7.10.0"
+  }
+}
