@@ -22,4 +22,5 @@ model Product {
   name  String
   price Decimal
   type  ProductType
+  isActive Boolean @default(true)
 }
