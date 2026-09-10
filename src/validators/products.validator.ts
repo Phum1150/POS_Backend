@@ -20,6 +20,20 @@ export function parseProductInput(body: unknown): ParseProductInputResult {
   return { ok: true, data: result.data }
 }
 
+const ProductTypeQuerySchema = z.enum(ProductType).optional()
+
+export type ParseProductTypeResult = { ok: true; data: ProductType | undefined } | { ok: false; error: string }
+
+export function parseProductType(rawType: string | undefined): ParseProductTypeResult {
+  const result = ProductTypeQuerySchema.safeParse(rawType)
+
+  if (!result.success) {
+    return { ok: false, error: result.error.issues.map((issue) => issue.message).join('; ') }
+  }
+
+  return { ok: true, data: result.data }
+}
+
 const ProductIdSchema = z.coerce.number().int()
 
 export type ParseProductIdResult = { ok: true; data: number } | { ok: false; error: string }

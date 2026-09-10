@@ -1,15 +1,13 @@
 import type { Context } from 'hono'
-import { z } from 'zod'
 import prisma from '../db'
-import { ProductType } from '../generated/prisma/enums'
 import { Prisma } from '../generated/prisma/client'
-import { parseProductId, parseProductInput } from '../validators/products.validator'
+import { parseProductId, parseProductInput, parseProductType } from '../validators/products.validator'
 
 export const getProducts = async (c: Context) => {
-  const typeResult = z.enum(ProductType).optional().safeParse(c.req.query('type'))
+  const typeResult = parseProductType(c.req.query('type'))
 
-  if (!typeResult.success) {
-    return c.json({ error: typeResult.error.issues.map((issue) => issue.message).join('; ') }, 400)
+  if (!typeResult.ok) {
+    return c.json({ error: typeResult.error }, 400)
   }
 
   const type = typeResult.data
@@ -26,7 +24,7 @@ export const getProducts = async (c: Context) => {
 }
 
 export const createProduct = async (c: Context) => {
-  const body = await c.req.json().catch(() => null)
+  const body = await c.req.json()
   const result = parseProductInput(body)
 
   if (!result.ok) {
@@ -45,7 +43,7 @@ export const updateProduct = async (c: Context) => {
     return c.json({ error: idResult.error }, 400)
   }
 
-  const body = await c.req.json().catch(() => null)
+  const body = await c.req.json()
   const result = parseProductInput(body)
 
   if (!result.ok) {
