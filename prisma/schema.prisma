@@ -18,12 +18,13 @@ enum ProductType {
 }
 
 model Product {
-  id        Int         @id @default(autoincrement())
-  name      String
-  price     Decimal
-  type      ProductType
-  isActive  Boolean     @default(true)
-  cartItems CartItem[]
+  id                   Int                   @id @default(autoincrement())
+  name                 String
+  price                Decimal
+  type                 ProductType
+  isActive             Boolean               @default(true)
+  cartItems            CartItem[]
+  checkoutHistoryItems CheckoutHistoryItem[]
 }
 
 model Cart {
@@ -40,4 +41,23 @@ model CartItem {
   productId Int
   product   Product @relation(fields: [productId], references: [id])
   quantity  Int
+}
+
+model CheckoutHistory {
+  id        Int                   @id @default(autoincrement())
+  promotion String?
+  netPrice  Decimal
+  createdAt DateTime              @default(now())
+  items     CheckoutHistoryItem[]
+}
+
+model CheckoutHistoryItem {
+  id                Int             @id @default(autoincrement())
+  checkoutHistoryId Int
+  checkoutHistory   CheckoutHistory @relation(fields: [checkoutHistoryId], references: [id])
+  productId         Int?
+  product           Product?        @relation(fields: [productId], references: [id], onDelete: SetNull)
+  productName       String
+  price             Decimal
+  quantity          Int
 }
