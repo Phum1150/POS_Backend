@@ -18,9 +18,26 @@ enum ProductType {
 }
 
 model Product {
-  id    Int         @id @default(autoincrement())
-  name  String
-  price Decimal
-  type  ProductType
-  isActive Boolean @default(true)
+  id        Int         @id @default(autoincrement())
+  name      String
+  price     Decimal
+  type      ProductType
+  isActive  Boolean     @default(true)
+  cartItems CartItem[]
+}
+
+model Cart {
+  id        Int        @id @default(autoincrement())
+  name      String
+  items     CartItem[]
+  createdAt DateTime   @default(now())
+}
+
+model CartItem {
+  id        Int     @id @default(autoincrement())
+  cartId    Int
+  cart      Cart    @relation(fields: [cartId], references: [id])
+  productId Int
+  product   Product @relation(fields: [productId], references: [id])
+  quantity  Int
 }

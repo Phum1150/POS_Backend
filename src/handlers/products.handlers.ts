@@ -30,7 +30,7 @@ export const getProducts = async (c: Context) => {
     where: {
       ...(type ? { type } : {}),
       ...(search ? { name: { contains: search } } : {}),
-      ...(isActive ? { isActive } : {}),
+      ...(isActive !== undefined ? { isActive  } : {}),
     },
   })
 
