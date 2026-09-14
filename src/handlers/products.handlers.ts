@@ -4,6 +4,7 @@ import { Prisma } from '../generated/prisma/client'
 import {
   parseIsActiveQuery,
   parseProductId,
+  parseProductBulkInput,
   parseProductInput,
   parseProductStatus,
   parseProductType,
@@ -48,6 +49,19 @@ export const createProduct = async (c: Context) => {
   const product = await prisma.product.create({ data: result.data })
 
   return c.json(product, 201)
+}
+
+export const createProductBulk = async (c: Context) => {
+  const body = await c.req.json()
+  const result = parseProductBulkInput(body)
+
+  if (!result.ok) {
+    return c.json({ error: result.error }, 400)
+  }
+
+  const { count } = await prisma.product.createMany({ data: result.data })
+
+  return c.json({ count }, 201)
 }
 
 export const updateProduct = async (c: Context) => {

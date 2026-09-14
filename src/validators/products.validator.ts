@@ -21,6 +21,21 @@ export function parseProductInput(body: unknown): ParseProductInputResult {
   return { ok: true, data: result.data }
 }
 
+const ProductBulkSchema = z.array(ProductSchema).min(1)
+
+export type ProductBulkInput = z.infer<typeof ProductBulkSchema>
+export type ParseProductBulkInputResult = { ok: true; data: ProductBulkInput } | { ok: false; error: string }
+
+export function parseProductBulkInput(body: unknown): ParseProductBulkInputResult {
+  const result = ProductBulkSchema.safeParse(body)
+
+  if (!result.success) {
+    return { ok: false, error: result.error.issues.map((issue) => issue.message).join('; ') }
+  }
+
+  return { ok: true, data: result.data }
+}
+
 const ProductTypeQuerySchema = z.enum(ProductType).optional()
 
 export type ParseProductTypeResult = { ok: true; data: ProductType | undefined } | { ok: false; error: string }
